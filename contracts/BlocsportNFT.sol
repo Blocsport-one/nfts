@@ -31,7 +31,7 @@ contract BlocsportNFT is ERC1155, Ownable, ReentrancyGuard {
         priceRanges[4] = 0.74 ether;
         priceRanges[5] = 0.3 ether;
         priceRanges[6] = 0.1 ether;
-				priceRanges[7] = 0.05 ether;
+        priceRanges[7] = 0.05 ether;
     }
 
     /**@dev sets the price for a range  */
@@ -75,28 +75,29 @@ contract BlocsportNFT is ERC1155, Ownable, ReentrancyGuard {
     }
 
     /**@dev the core of the system. you can buy only one  */
-    function buyNFT(uint256 _id) public  payable nonReentrant {
-        require(_totalSupply[_id] == 0, "nft already owned");
+    function buyNFT(uint256 _id) public payable nonReentrant {
         //get the item price
         require(
             msg.value == getItemPrice(_id),
             "you should send the exact amount of ETH to buy this"
         );
 
-        _totalSupply[_id] = 1;
+        _totalSupply[_id] = _totalSupply[_id] + 1;
         _mint(msg.sender, _id, 1, "0x0000");
     }
 
+    //the minting
     function mint(
         address to,
         uint256 id,
+        uint256 qty,
         bytes memory data
     ) public onlyOwner {
-        require(_totalSupply[id] == 0, "nft already owned");
-        _totalSupply[id] = 1;
-        _mint(to, id, 1, data);
+        _totalSupply[id] = _totalSupply[id] + qty;
+        _mint(to, id, qty, data);
     }
 
+    //burns one token
     function burn(
         address account,
         uint256 id,
@@ -107,7 +108,7 @@ contract BlocsportNFT is ERC1155, Ownable, ReentrancyGuard {
             "ERC1155: caller is not owner nor approved"
         );
         _burn(account, id, value);
-				_totalSupply[id] = 0;
+        _totalSupply[id] = _totalSupply[id] - 1;
     }
 
     function setBaseURI(string memory newuri) public onlyOwner {

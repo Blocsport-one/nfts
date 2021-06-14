@@ -27,14 +27,15 @@ describe("NFT", function () {
 	})
 
 	it("simple minting test", async function () {
-		//owner doesn't have any balance
 		expect(await nft.balanceOf(acc1.address, 1)).to.equal(0)
-
-		//mint
-		await nft.mint(acc1.address, 1, 0x00)
-
-		//acc1 should have a token
+		await nft.mint(acc1.address, 1, 1, 0x00)
 		expect(await nft.balanceOf(acc1.address, 1)).to.equal(1)
+	})
+
+	it("multiple minting test", async function () {
+		expect(await nft.balanceOf(acc1.address, 1)).to.equal(0)
+		await nft.mint(acc1.address, 1, 10, 0x00)
+		expect(await nft.balanceOf(acc1.address, 1)).to.equal(10)
 	})
 
 	it("setting a price per range works", async function () {
