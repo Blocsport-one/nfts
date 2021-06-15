@@ -40,8 +40,8 @@ async function main() {
 
 	await sleep(60000) //1 min sleep
 	await hre.run("verify:verify", {
-		address: dep.address,
-		constructorArguments: [openSeaProxy],
+		address: "0x907F4577D1eDE2c48648Ce56A2051D8F7c3173c6",
+		constructorArguments: [],
 	})
 }
 
