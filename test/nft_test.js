@@ -51,6 +51,22 @@ describe("NFT", function () {
 		expect(await nft.balanceOf(acc1.address, 1000001)).to.equal(1)
 	})
 
+	it("can't buy over the limit", async function () {
+		//try to buy 11 nfts range 0
+		await nft.setPriceRange(0, web3.utils.toWei("0.01", "ether"))
+
+		for (i = 0; i <= 9; i++) {
+			await nft.connect(acc1).buyNFT(1, { value: web3.utils.toWei("0.01", "ether") })
+		}
+		//acc1 should have 10 tokens
+		expect(await nft.balanceOf(acc1.address, 1)).to.equal(10)
+
+		//tries to buy one more
+		await expectRevert.unspecified(
+			nft.connect(acc1).buyNFT(1, { value: web3.utils.toWei("0.01", "ether") })
+		)
+	})
+
 	it("buying an NFT with less money. fails", async function () {
 		//buys an NFT in range 7... 0.05 eth
 		const itemPrice = await nft.getItemPrice(1000001)

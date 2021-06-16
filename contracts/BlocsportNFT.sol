@@ -19,6 +19,7 @@ contract BlocsportNFT is ERC1155, Ownable {
 	mapping(uint256 => string) public _tokenURIs;
 
 	uint256[] priceRanges = new uint256[](8);
+	uint256[] limitRanges = new uint256[](8);
 
 	constructor() ERC1155(_baseURI) {
 		//initial prices
@@ -30,6 +31,16 @@ contract BlocsportNFT is ERC1155, Ownable {
 		priceRanges[5] = 0.3 ether;
 		priceRanges[6] = 0.1 ether;
 		priceRanges[7] = 0.05 ether;
+
+		//max supply of a token in range
+		limitRanges[0] = 10;
+		limitRanges[1] = 10;
+		limitRanges[2] = 300;
+		limitRanges[3] = 1000;
+		limitRanges[4] = 1000;
+		limitRanges[5] = 1000;
+		limitRanges[6] = 3000;
+		limitRanges[7] = 5000;
 	}
 
 	/**@dev sets the price for a range  */
@@ -40,6 +51,11 @@ contract BlocsportNFT is ERC1155, Ownable {
 	/**@dev gets the price for a range  */
 	function getPriceForRange(uint256 _index) internal view returns (uint256) {
 		return priceRanges[_index];
+	}
+
+	/**@dev gets the max supply for a range  */
+	function getLimitForRange(uint256 _index) internal view returns (uint256) {
+		return limitRanges[_index];
 	}
 
 	/**@dev returns the price for an NFT */
@@ -72,10 +88,41 @@ contract BlocsportNFT is ERC1155, Ownable {
 		return priceRange;
 	}
 
+	/**@dev returns the price for an NFT */
+	function getItemMaxSupply(uint256 _id) public view returns (uint256) {
+		uint256 maxSupplyOfID = 0;
+		if (_id <= 500) {
+			maxSupplyOfID = getLimitForRange(0);
+		}
+		if (_id > 500 && _id <= 5000) {
+			maxSupplyOfID = getLimitForRange(1);
+		}
+		if (_id > 5000 && _id <= 10000) {
+			maxSupplyOfID = getLimitForRange(2);
+		}
+		if (_id > 10000 && _id <= 50000) {
+			maxSupplyOfID = getLimitForRange(3);
+		}
+		if (_id > 50000 && _id <= 100000) {
+			maxSupplyOfID = getLimitForRange(4);
+		}
+		if (_id > 100000 && _id <= 500000) {
+			maxSupplyOfID = getLimitForRange(5);
+		}
+		if (_id > 500000 && _id <= 1000000) {
+			maxSupplyOfID = getLimitForRange(6);
+		}
+		if (_id > 1000000) {
+			maxSupplyOfID = getPriceForRange(7);
+		}
+		return maxSupplyOfID;
+	}
+
 	/**@dev the core of the system. you can buy only one  */
 	function buyNFT(uint256 _id) public payable {
 		//get the item price
 		require(msg.value == getItemPrice(_id), "you should send the exact amount of ETH to buy this");
+		require(_totalSupply[_id] < getItemMaxSupply(_id), "max quantity reached");
 
 		_totalSupply[_id] = _totalSupply[_id] + 1;
 		_mint(msg.sender, _id, 1, "0x0000");
@@ -88,6 +135,7 @@ contract BlocsportNFT is ERC1155, Ownable {
 		uint256 qty,
 		bytes memory data
 	) public onlyOwner {
+		require(_totalSupply[id] < getItemMaxSupply(id), "max quantity reached");
 		_totalSupply[id] = _totalSupply[id] + qty;
 		_mint(to, id, qty, data);
 	}
