@@ -2,7 +2,7 @@
 
 ## Always use the correct contract addresses
 
-Rinkeby: 0xf67089d918ef0b8ed12bca20f202b5523061151e
-Rinkeby quick interract: https://rinkeby.etherscan.io/address/0xf67089d918ef0b8ed12bca20f202b5523061151e#writeContract
+Rinkeby
+https://rinkeby.etherscan.io/address/0x2179766961a5fe0673e5fB35619157B25e3346a3#code
 
 ### License MIT

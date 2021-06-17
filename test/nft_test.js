@@ -19,86 +19,73 @@ describe("NFT", function () {
 	})
 
 	it("simple test...", async function () {
-		expect(await nft.getItemPrice(1)).to.equal(web3.utils.toWei("14.7", "ether"))
+		expect(await nft.price(1)).to.equal(0)
 	})
 
 	it("buying one works", async function () {
-		expect(await nft.getItemPrice(1)).to.equal(web3.utils.toWei("14.7", "ether"))
+		await nft.setPriceAndMaxSupply(10, web3.utils.toWei("0.01", "ether"), 1)
+		expect(await nft.price(10)).to.equal(web3.utils.toWei("0.01", "ether"))
+		await nft.connect(acc1).buyNFT(10, { value: web3.utils.toWei("0.01", "ether") })
+		expect(await nft.balanceOf(acc1.address, 10)).to.equal(1)
+	})
+
+	it("can't buy with less money or over the max supply", async function () {
+		await nft.setPriceAndMaxSupply(10, web3.utils.toWei("0.01", "ether"), 2)
+		expect(await nft.price(10)).to.equal(web3.utils.toWei("0.01", "ether"))
+
+		await expectRevert.unspecified(
+			nft.connect(acc1).buyNFT(10, { value: web3.utils.toWei("0.009", "ether") })
+		)
+
+		await nft.connect(acc1).buyNFT(10, { value: web3.utils.toWei("0.01", "ether") })
+		await nft.connect(acc1).buyNFT(10, { value: web3.utils.toWei("0.01", "ether") })
+		expect(await nft.balanceOf(acc1.address, 10)).to.equal(2)
+
+		await expectRevert.unspecified(
+			nft.connect(acc1).buyNFT(10, { value: web3.utils.toWei("0.01", "ether") })
+		)
 	})
 
 	it("simple minting test", async function () {
+		await nft.setPriceAndMaxSupply(1, web3.utils.toWei("0.01", "ether"), 10)
 		expect(await nft.balanceOf(acc1.address, 1)).to.equal(0)
 		await nft.mint(acc1.address, 1, 1, 0x00)
 		expect(await nft.balanceOf(acc1.address, 1)).to.equal(1)
 	})
 
 	it("multiple minting test", async function () {
+		await nft.setPriceAndMaxSupply(1, web3.utils.toWei("0.01", "ether"), 10)
 		expect(await nft.balanceOf(acc1.address, 1)).to.equal(0)
 		await nft.mint(acc1.address, 1, 10, 0x00)
 		expect(await nft.balanceOf(acc1.address, 1)).to.equal(10)
 	})
 
-	it("setting a price per range works", async function () {
-		expect(await nft.getItemPrice(1)).to.equal(web3.utils.toWei("14.7", "ether"))
-		await nft.setPriceRange(0, web3.utils.toWei("15", "ether"))
-		expect(await nft.getItemPrice(1)).to.equal(web3.utils.toWei("15", "ether"))
+	it("changing the price setter works", async function () {
+		expect(await nft.priceSetter()).to.equal(owner.address)
+		await nft.setPriceSetter(acc1.address)
+		expect(await nft.priceSetter()).to.equal(acc1.address)
 	})
 
-	it("buying an NFT with money works", async function () {
-		//buys an NFT in range 7... 0.05 eth
-		await nft.connect(acc1).buyNFT(1000001, { value: web3.utils.toWei("0.05", "ether") })
-		//acc1 should have a token
-		expect(await nft.balanceOf(acc1.address, 1000001)).to.equal(1)
-	})
-
-	it("can't buy over the limit", async function () {
-		//try to buy 11 nfts range 0
-		await nft.setPriceRange(0, web3.utils.toWei("0.01", "ether"))
-
-		for (i = 0; i <= 9; i++) {
-			await nft.connect(acc1).buyNFT(1, { value: web3.utils.toWei("0.01", "ether") })
-		}
-		//acc1 should have 10 tokens
-		expect(await nft.balanceOf(acc1.address, 1)).to.equal(10)
-
-		//tries to buy one more
-		await expectRevert.unspecified(
-			nft.connect(acc1).buyNFT(1, { value: web3.utils.toWei("0.01", "ether") })
-		)
-	})
-
-	it("buying an NFT with less money. fails", async function () {
-		//buys an NFT in range 7... 0.05 eth
-		const itemPrice = await nft.getItemPrice(1000001)
-		await expectRevert.unspecified(
-			nft.connect(acc1).buyNFT(1000001, { value: web3.utils.toWei("0.049", "ether") })
-		)
-		//acc1 should not have the token
-		expect(await nft.balanceOf(acc1.address, 1000001)).to.equal(0)
-	})
-
-	it("change price range and buy works with the new price", async function () {
-		expect(await nft.getItemPrice(1000001)).to.equal(web3.utils.toWei("0.05", "ether"))
-		await nft.setPriceRange(7, web3.utils.toWei("0.2", "ether"))
-		expect(await nft.getItemPrice(1000001)).to.equal(web3.utils.toWei("0.2", "ether"))
-
-		await nft.connect(acc1).buyNFT(1000001, { value: web3.utils.toWei("0.2", "ether") })
-
-		//acc1 should have a token
-		expect(await nft.balanceOf(acc1.address, 1000001)).to.equal(1)
+	it("changing price works", async function () {
+		await nft.setPriceAndMaxSupply(10, web3.utils.toWei("0.01", "ether"), 10)
+		await nft.connect(acc1).buyNFT(10, { value: web3.utils.toWei("0.01", "ether") })
+		await nft.setPriceAndMaxSupply(10, web3.utils.toWei("0.02", "ether"), 10)
+		await nft.connect(acc1).buyNFT(10, { value: web3.utils.toWei("0.02", "ether") })
+		expect(await nft.balanceOf(acc1.address, 10)).to.equal(2)
 	})
 
 	it("withdraw monney works", async function () {
 		const tracker = await balance.tracker(owner.address)
 		let ownerInitialBalance = Number(await tracker.get("wei"))
 
-		await nft.connect(acc1).buyNFT(1000001, { value: web3.utils.toWei("0.05", "ether") })
-		await nft.connect(acc2).buyNFT(1000002, { value: web3.utils.toWei("0.05", "ether") })
+		await nft.setPriceAndMaxSupply(12, web3.utils.toWei("0.1", "ether"), 10)
+		await nft.connect(acc1).buyNFT(12, { value: web3.utils.toWei("0.1", "ether") })
+		await nft.connect(acc1).buyNFT(12, { value: web3.utils.toWei("0.1", "ether") })
 
 		await nft.withdraw()
 		let ownerFinalBalance = Number(await tracker.get("wei"))
 		expect(ownerFinalBalance - ownerInitialBalance).to.be.greaterThan(
-			Number(web3.utils.toWei("0.099", "ether")) //some gas costs are lost
+			Number(web3.utils.toWei("0.199", "ether")) //some gas costs are lost
 		)
 	})
 })
