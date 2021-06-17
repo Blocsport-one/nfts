@@ -17,7 +17,7 @@ contract BlocsportNFT is ERC1155, Ownable {
 
 	string public _baseURI = "https://api.nftdeals.io/v1/collection/item/metadata/";
 	string public _contractURI =
-		"https://raw.githubusercontent.com/Blocsport-one/nfts/master/contract-uri.json";
+		"https://nft-storage-system.s3.eu-west-1.amazonaws.com/nfts-1/contract_uri";
 	mapping(uint256 => string) public _tokenURIs;
 
 	mapping(uint256 => uint256) public totalSupply;
