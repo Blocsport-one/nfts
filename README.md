@@ -2,7 +2,6 @@
 
 ## Always use the correct contract addresses
 
-Rinkeby
-https://rinkeby.etherscan.io/address/0x2179766961a5fe0673e5fB35619157B25e3346a3#code
+BSC: 0x9ffaE7f5156407f94fE8538474C8c29b8F51999d
 
 ### License MIT
