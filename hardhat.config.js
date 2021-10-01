@@ -36,7 +36,7 @@ module.exports = {
 			gas: 1500000,
 			gasPrice: 87000000000, //87 gwei
 			timeout: 15000,
-			accounts: [process.env.PRIVATE_KEY_MAINNET],
+			accounts: [process.env.PRIVATE_KEY],
 		},
 		rinkeby: {
 			url: process.env.RINKEBY_RPC,
@@ -44,17 +44,17 @@ module.exports = {
 			gas: 1500000,
 			gasPrice: 87000000000, //87 gwei
 			timeout: 15000,
-			accounts: [process.env.PRIVATE_KEY_RINKEBY],
+			accounts: [process.env.PRIVATE_KEY],
 		},
 		bsc_test: {
 			url: process.env.BSC_RPC_TEST,
 			network_id: 97,
-			accounts: [process.env.PRIVATE_KEY_BSC],
+			accounts: [process.env.PRIVATE_KEY],
 		},
 		bsc: {
 			url: process.env.BSC_RPC,
 			network_id: 56,
-			accounts: [process.env.PRIVATE_KEY_BSC],
+			accounts: [process.env.PRIVATE_KEY],
 		},
 		matic: {
 			url: process.env.MATIC_RPC,
@@ -62,7 +62,7 @@ module.exports = {
 			gas: 10000000,
 			gasPrice: 1000000000, //1 gwei
 			allowUnlimitedContractSize: true,
-			accounts: [process.env.PRIVATE_KEY_MATIC],
+			accounts: [process.env.PRIVATE_KEY],
 		},
 		matic_test: {
 			url: process.env.MATIC_RPC_TEST,
@@ -70,7 +70,23 @@ module.exports = {
 			gas: 10000000,
 			gasPrice: 1000000000, //1 gwei
 			allowUnlimitedContractSize: true,
-			accounts: [process.env.PRIVATE_KEY_MATIC],
+			accounts: [process.env.PRIVATE_KEY],
+		},
+		iotex: {
+			url: process.env.IOTEX_RPC,
+			network_id: 4689,
+			gas: 10000000,
+			gasPrice: 1000000000000, //10000 gwei
+			allowUnlimitedContractSize: true,
+			accounts: [process.env.PRIVATE_KEY],
+		},
+		iotex_test: {
+			url: process.env.IOTEX_RPC_TEST,
+			network_id: 4690,
+			gas: 10000000,
+			gasPrice: 10000000000, //100 gwei
+			allowUnlimitedContractSize: true,
+			accounts: [process.env.PRIVATE_KEY],
 		},
 	},
 
