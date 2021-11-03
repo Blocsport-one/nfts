@@ -185,7 +185,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 				);
 			}
 		} else {
-			//Release the item to highBidder
+			//Release the item to highestBidder
 			if (isERC721(al.nftContract)) {
 				IERC721 auctionToken = IERC721(al.nftContract);
 				auctionToken.safeTransferFrom(address(this), al.highBidder, auctions[auctionId].nftID);
