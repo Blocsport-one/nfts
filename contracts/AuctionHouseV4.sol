@@ -25,8 +25,8 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 	uint256 minSaleTime = 2 minutes;
 	uint256 maxSaleTime = 2592000; // 30 days
 
-	//auctionID -> highest bidder
-	mapping(address => uint256) public fundsByBidder;
+	//address -> funds available to withdraw
+	mapping(address => uint256) public fundsByAddress;
 
 	event AuctionListed(
 		uint256 auction_id,
@@ -41,6 +41,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 	event OnSale(address indexed nftContract, uint256 itemID, uint256 price, uint256 endTime);
 	event ListingSold(address nftContract, uint256 itemID, uint256 price, address buyer);
 	event RemovedFromSale(uint256 nftID, uint256 itemID);
+	event ClaimUnsold(uint256 nftID);
 
 	struct AuctionListing {
 		address auctioneer;
@@ -81,7 +82,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 		address nftContract,
 		uint256 nftID,
 		uint256 startPrice
-	) public whenNotPaused {
+	) external whenNotPaused {
 		require(startPrice >= 0.01 ether, "startprice should be >= 0.01 ether");
 		require(nftContract != address(0), "tokenContract != address(0)");
 
@@ -123,7 +124,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 
 	/// @notice Place a bid on an auction
 	/// @param auctionId uint. Which listing to place bid on.
-	function bid(uint256 auctionId) public payable nonReentrant {
+	function bid(uint256 auctionId) external payable nonReentrant {
 		require(auctionId < auctionCount, "auctionId < auctionCount");
 		require(auctionActive[auctionId] == true, "auctionActive[auctionId] == true");
 
@@ -137,7 +138,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 			require(msg.value >= currentBid + al.tick, "msg.value >= currentBid + al.tick");
 			//refund the previous bidder
 			if (al.highBidder != address(0)) {
-				fundsByBidder[al.highBidder] += al.currentBid; // record the refund that this user can claim
+				fundsByAddress[al.highBidder] += al.currentBid; // record the refund that this user can claim
 			}
 		} else {
 			require(msg.value >= al.startPrice, "msg.value >= al.startPrice");
@@ -184,6 +185,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 					""
 				);
 			}
+			emit ClaimUnsold(al.nftID);
 		} else {
 			//Release the item to highestBidder
 			if (isERC721(al.nftContract)) {
@@ -200,8 +202,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 				);
 			}
 			//Release the funds to auctioneer
-			(bool success, ) = al.auctioneer.call{ value: al.currentBid }("");
-			require(success, "Address: unable to send value, recipient may have reverted");
+			fundsByAddress[al.auctioneer] += al.currentBid;
 
 			emit AuctionWon(auctionId, al.currentBid - al.tick, al.highBidder);
 		}
@@ -303,10 +304,10 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 		emit ListingSold(sl.nftContract, sl.nftID, sl.price, msg.sender);
 	}
 
-	//refunds for lost bids
-	function withdrawLostBids() external {
-		uint256 refund = fundsByBidder[msg.sender];
-		fundsByBidder[msg.sender] = 0;
+	//get the $ that you're supposed to
+	function withdrawByAddress() external {
+		uint256 refund = fundsByAddress[msg.sender];
+		fundsByAddress[msg.sender] = 0;
 		(bool success, ) = msg.sender.call{ value: refund }("");
 		require(success, "Address: unable to send value, recipient may have reverted");
 	}
@@ -355,7 +356,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 	}
 
 	// changes the market fee. 50 = 0.5%
-	function changeMarketFee(uint256 _marketFee) public onlyOwner {
+	function changeMarketFee(uint256 _marketFee) external onlyOwner {
 		marketFee = _marketFee;
 	}
 
@@ -380,7 +381,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 	}
 
 	// makes life easier
-	function getCurrentBalance() public view returns (uint256) {
+	function getCurrentBalance() external view returns (uint256) {
 		return address(this).balance;
 	}
 
@@ -389,7 +390,7 @@ contract AuctionHouse is Ownable, Pausable, ReentrancyGuard {
 	 * @dev Sets the paused failsafe. Can only be called by owner
 	 * @param _setPaused - paused state
 	 */
-	function setPaused(bool _setPaused) public onlyOwner {
+	function setPaused(bool _setPaused) external onlyOwner {
 		return (_setPaused) ? _pause() : _unpause();
 	}
 }
