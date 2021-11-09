@@ -16,7 +16,10 @@ contract BlocsportERC721 is ERC721Enumerable, Ownable {
 	string private _baseTokenURI = "https://xxxxxxxxxxxx";
 	string private _contractURI = "https://yyyyyyyyyyyyy";
 
-	uint256 public maxSupply = 30000;
+	uint256 public maxSupplyT1 = 5000;
+	uint256 public maxSupplyT2 = 5000;
+	uint256 public maxSupplyT3 = 5000;
+	uint256 public maxSupplyT4 = 5000;
 
 	uint256 public pricePerTokenTier1 = 70000000000000000; //0.07 ETH
 	uint256 public pricePerTokenTier2 = 80000000000000000; //0.08 ETH
@@ -40,15 +43,19 @@ contract BlocsportERC721 is ERC721Enumerable, Ownable {
 	function publicBuy(uint256 nftTier, uint256 qty) external payable {
 		require(saleLive, "sale not live");
 		require(qty <= 20, "no more than 20");
-		require(totalSupply() + qty <= maxSupply, "out of stock");
+
 		if (nftTier == 1) {
 			require(pricePerTokenTier1 * qty == msg.value, "exact amount needed");
+			require(totalSupply() + qty <= maxSupplyT1, "out of stock");
 		} else if (nftTier == 2) {
 			require(pricePerTokenTier2 * qty == msg.value, "exact amount needed");
+			require(totalSupply() + qty <= maxSupplyT2, "out of stock");
 		} else if (nftTier == 3) {
 			require(pricePerTokenTier3 * qty == msg.value, "exact amount needed");
+			require(totalSupply() + qty <= maxSupplyT3, "out of stock");
 		} else if (nftTier == 4) {
 			require(pricePerTokenTier4 * qty == msg.value, "exact amount needed");
+			require(totalSupply() + qty <= maxSupplyT4, "out of stock");
 		} else {
 			revert("unknown tier");
 		}
@@ -61,7 +68,17 @@ contract BlocsportERC721 is ERC721Enumerable, Ownable {
 
 	// admin can mint for giveaways, airdrops etc
 	function adminMint(uint256 nftTier, address to) external onlyOwner {
-		require(totalSupply() + 1 <= maxSupply, "out of stock");
+		if (nftTier == 1) {
+			require(totalSupply() + 1 <= maxSupplyT1, "out of stock");
+		} else if (nftTier == 2) {
+			require(totalSupply() + 1 <= maxSupplyT2, "out of stock");
+		} else if (nftTier == 3) {
+			require(totalSupply() + 1 <= maxSupplyT3, "out of stock");
+		} else if (nftTier == 4) {
+			require(totalSupply() + 1 <= maxSupplyT4, "out of stock");
+		} else {
+			revert("unknown tier");
+		}
 		tire[totalSupply() + 1] = nftTier;
 		_safeMint(to, totalSupply() + 1);
 	}
@@ -156,9 +173,24 @@ contract BlocsportERC721 is ERC721Enumerable, Ownable {
 		}
 	}
 
-	function decreaseMaxSupply(uint256 newMaxSupply) external onlyOwner {
-		require(newMaxSupply < maxSupply, "you can only decrease it");
-		maxSupply = newMaxSupply;
+	//modify the tires supply
+	function changeTireMaxSupply(uint256 tier, uint256 newMaxSupply) external onlyOwner {
+		if (tier == 1) {
+			require(newMaxSupply < maxSupplyT1, "you can only lower it");
+			maxSupplyT1 = newMaxSupply;
+		}
+		if (tier == 2) {
+			require(newMaxSupply < maxSupplyT2, "you can only lower it");
+			maxSupplyT2 = newMaxSupply;
+		}
+		if (tier == 3) {
+			require(newMaxSupply < maxSupplyT3, "you can only lower it");
+			maxSupplyT3 = newMaxSupply;
+		}
+		if (tier == 4) {
+			require(newMaxSupply < maxSupplyT4, "you can only lower it");
+			maxSupplyT4 = newMaxSupply;
+		}
 	}
 
 	//easy for some devs
