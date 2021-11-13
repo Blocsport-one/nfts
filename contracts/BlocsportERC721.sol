@@ -21,6 +21,11 @@ contract BlocsportERC721 is ERC721Enumerable, Ownable {
 	uint256 public maxSupplyT3 = 5000;
 	uint256 public maxSupplyT4 = 5000;
 
+	uint256 public totalMintedT1 = 0;
+	uint256 public totalMintedT2 = 0;
+	uint256 public totalMintedT3 = 0;
+	uint256 public totalMintedT4 = 0;
+
 	uint256 public pricePerTokenTier1 = 70000000000000000; //0.07 ETH
 	uint256 public pricePerTokenTier2 = 80000000000000000; //0.08 ETH
 	uint256 public pricePerTokenTier3 = 90000000000000000; //0.09 ETH
@@ -46,16 +51,20 @@ contract BlocsportERC721 is ERC721Enumerable, Ownable {
 
 		if (nftTier == 1) {
 			require(pricePerTokenTier1 * qty == msg.value, "exact amount needed");
-			require(totalSupply() + qty <= maxSupplyT1, "out of stock");
+			require(totalMintedT1 + qty <= maxSupplyT1, "out of stock T1");
+			totalMintedT1 = totalMintedT1 + qty;
 		} else if (nftTier == 2) {
 			require(pricePerTokenTier2 * qty == msg.value, "exact amount needed");
-			require(totalSupply() + qty <= maxSupplyT2, "out of stock");
+			require(totalMintedT2 + qty <= maxSupplyT2, "out of stock T2");
+			totalMintedT2 = totalMintedT2 + qty;
 		} else if (nftTier == 3) {
 			require(pricePerTokenTier3 * qty == msg.value, "exact amount needed");
-			require(totalSupply() + qty <= maxSupplyT3, "out of stock");
+			require(totalMintedT3 + qty <= maxSupplyT3, "out of stock T3");
+			totalMintedT3 = totalMintedT3 + qty;
 		} else if (nftTier == 4) {
 			require(pricePerTokenTier4 * qty == msg.value, "exact amount needed");
-			require(totalSupply() + qty <= maxSupplyT4, "out of stock");
+			require(totalMintedT4 + qty <= maxSupplyT4, "out of stock T4");
+			totalMintedT4 = totalMintedT4 + qty;
 		} else {
 			revert("unknown tier");
 		}
@@ -69,13 +78,17 @@ contract BlocsportERC721 is ERC721Enumerable, Ownable {
 	// admin can mint for giveaways, airdrops etc
 	function adminMint(uint256 nftTier, address to) external onlyOwner {
 		if (nftTier == 1) {
-			require(totalSupply() + 1 <= maxSupplyT1, "out of stock");
+			require(totalMintedT1 + 1 <= maxSupplyT1, "out of stock T1");
+			totalMintedT1 = totalMintedT1 + 1;
 		} else if (nftTier == 2) {
-			require(totalSupply() + 1 <= maxSupplyT2, "out of stock");
+			require(totalMintedT2 + 1 <= maxSupplyT2, "out of stock T2");
+			totalMintedT2 = totalMintedT2 + 1;
 		} else if (nftTier == 3) {
-			require(totalSupply() + 1 <= maxSupplyT3, "out of stock");
+			require(totalMintedT3 + 1 <= maxSupplyT3, "out of stock T3");
+			totalMintedT3 = totalMintedT3 + 1;
 		} else if (nftTier == 4) {
-			require(totalSupply() + 1 <= maxSupplyT4, "out of stock");
+			require(totalMintedT4 + 1 <= maxSupplyT4, "out of stock T4");
+			totalMintedT4 = totalMintedT4 + 1;
 		} else {
 			revert("unknown tier");
 		}
