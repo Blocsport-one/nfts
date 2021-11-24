@@ -1,7 +1,9 @@
 # Blocsport.One NFT Smart Contracts
 
-## Always use the correct contract addresses (old contract for nftdeals.io)
-
-BSC: 0x9ffaE7f5156407f94fE8538474C8c29b8F51999d
+### This repo contains the ff contracts:
+- Marketplace (Auction House)
+- NFT ERC1155
+- NFT ERC721
+- Genesis (ERC721)
 
 ### License MIT
