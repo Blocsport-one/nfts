@@ -1,4 +1,4 @@
-# ERC1155 NFT Smart Contract
+# Blocsport.One NFT Smart Contracts
 
 ## Always use the correct contract addresses (old contract for nftdeals.io)
 
