@@ -20,7 +20,12 @@
 		"deploy_genesis_721:matic_test": "NETWORK=matic_test npx hardhat run --network matic_test scripts/deploy_genesis_721.js",
 		"deploy:matic": "NETWORK=matic npx hardhat run --network matic scripts/deploy.js",
 		"deploy:iotex_test": "NETWORK=iotex_test npx hardhat run --network iotex_test scripts/deploy.js",
-		"deploy:iotext": "NETWORK=iotex npx hardhat run --network iotex scripts/deploy.js"
+		"deploy:iotext": "NETWORK=iotex npx hardhat run --network iotex scripts/deploy.js",
+		"deploy_auction_house:moonbase_alpha": "NETWORK=moonbase_alpha npx hardhat run --network moonbase_alpha scripts/deploy_auction_house.js",
+		"deploy_auction_house:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_auction_house.js",
+		"deploy:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy.js",
+		"deploy_nft_721:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_nft_721.js",
+		"deploy_genesis_721:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_genesis_721.js"
 	},
 	"author": "",
 	"license": "MIT",

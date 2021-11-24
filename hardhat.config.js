@@ -72,6 +72,26 @@ module.exports = {
       allowUnlimitedContractSize: true,
       accounts: [process.env.PRIVATE_KEY_MATIC_TESTNET],
     },
+    bsc_test: {
+      url: process.env.BSC_RPC_TEST,
+      network_id: 97,
+      accounts: [process.env.PRIVATE_KEY_BSC_TESTNET],
+    },
+    bsc: {
+      url: process.env.BSC_RPC,
+      network_id: 56,
+      accounts: [process.env.PRIVATE_KEY_BSC],
+    },
+    moonbase_alpha: {
+      url: process.env.MOONBASE_ALPHA_RPC_TEST,
+      chainId: 1287, // 0x507 in hex,
+      accounts: [process.env.PRIVATE_MOONBASE_ALPHA],
+    },
+    moonriver: {
+      url: process.env.MOONRIVER_RPC,
+      chainId: 1285, // 0x505 in hex,
+      accounts: [process.env.PRIVATE_MOONRIVER],
+    },
     // iotex: {
     // 	url: process.env.IOTEX_RPC,
     // 	network_id: 4689,
