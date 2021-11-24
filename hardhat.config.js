@@ -89,7 +89,6 @@ module.exports = {
     // 	accounts: [process.env.PRIVATE_KEY_IOTEX_TESTNET],
     // },
   },
-
   gasReporter: {
     enabled: !!process.env.REPORT_GAS === true,
     currency: "USD",
