@@ -8,8 +8,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract BalliesNFT is ERC721Enumerable, Ownable {
+contract BalliesNFT is ERC721Enumerable, Ownable, ReentrancyGuard {
     using Strings for uint256;
     using ECDSA for bytes32;
 
@@ -29,7 +30,11 @@ contract BalliesNFT is ERC721Enumerable, Ownable {
         addMinter(msg.sender);
     }
 
-    function privateSale(uint256 qty, address to) external payable {
+    function privateSale(uint256 qty, address to)
+        external
+        payable
+        nonReentrant
+    {
         require(
             block.timestamp >= privateSaleStartTime,
             "private sale not live"
@@ -47,7 +52,7 @@ contract BalliesNFT is ERC721Enumerable, Ownable {
         }
     }
 
-    function publicSale(uint256 qty, address to) external payable {
+    function publicSale(uint256 qty, address to) external payable nonReentrant {
         require(block.timestamp >= publicSaleStartTime, "public sale not live");
         require(qty > 0 && qty <= 3, "minimum of 1 and maximum of 3 token");
         require(salePrice * qty == msg.value, "exact BNB amount needed");
@@ -195,11 +200,12 @@ contract BalliesNFT is ERC721Enumerable, Ownable {
         erc20Token.transfer(msg.sender, erc20Token.balanceOf(address(this)));
     }
 
-    function getBackERC1155(IERC1155 erc1155Token, uint256 id)
-        public
-        onlyOwner
-    {
-        erc1155Token.safeTransferFrom(address(this), msg.sender, id, 1, "");
+    function getBackERC1155(
+        IERC1155 erc1155Token,
+        uint256 id,
+        uint256 qty
+    ) public onlyOwner {
+        erc1155Token.safeTransferFrom(address(this), msg.sender, id, qty, "");
     }
 
     function getBackERC721(IERC721 erc721Token, uint256 id) public onlyOwner {
