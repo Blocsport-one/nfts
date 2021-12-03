@@ -13,6 +13,7 @@
 		"deploy:ganache": "NETWORK=ganache npx hardhat run --network ganache scripts/deploy.js",
 		"deploy:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy.js",
 		"deploy_nft_721:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy_nft_721.js",
+		"deploy_ballies_721:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy_ballies_721.js",
 		"deploy:bsc": "NETWORK=bsc npx hardhat run --network bsc scripts/deploy.js",
 		"deploy:bsc_test": "NETWORK=bsc_test npx hardhat run --network bsc_test scripts/deploy.js",
 		"deploy:mainnet": "NETWORK=mainnet npx hardhat run --network rinkeby scripts/deploy.js",
