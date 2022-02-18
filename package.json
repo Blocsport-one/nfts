@@ -32,7 +32,9 @@
 		"deploy_shard_manager:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_shard_manager.js",
 		"deploy_blocsportnft_1155:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy_blocsportnft_1155.js",
 		"deploy_blocsportnft_1155:matic": "NETWORK=matic npx hardhat run --network matic scripts/deploy_blocsportnft_1155.js",
-		"deploy_blocsportnft_1155:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_blocsportnft_1155.js"
+		"deploy_blocsportnft_1155:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_blocsportnft_1155.js",
+		"deploy_blocsportnft_1155_with_token:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy_blocsportnft_1155_with_token.js",
+		"deploy_blocsportnft_1155_with_token:bsc": "NETWORK=bsc npx hardhat run --network bsc scripts/deploy_blocsportnft_1155_with_token.js"
 	},
 	"author": "",
 	"license": "MIT",
