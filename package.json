@@ -18,7 +18,6 @@
 		"deploy:bsc_test": "NETWORK=bsc_test npx hardhat run --network bsc_test scripts/deploy.js",
 		"deploy:mainnet": "NETWORK=mainnet npx hardhat run --network rinkeby scripts/deploy.js",
 		"deploy:matic_test": "NETWORK=matic_test npx hardhat run --network matic_test scripts/deploy.js",
-		"deploy_genesis_721:matic_test": "NETWORK=matic_test npx hardhat run --network matic_test scripts/deploy_genesis_721.js",
 		"deploy:matic": "NETWORK=matic npx hardhat run --network matic scripts/deploy.js",
 		"deploy:iotex_test": "NETWORK=iotex_test npx hardhat run --network iotex_test scripts/deploy.js",
 		"deploy:iotext": "NETWORK=iotex npx hardhat run --network iotex scripts/deploy.js",
@@ -26,7 +25,14 @@
 		"deploy_auction_house:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_auction_house.js",
 		"deploy:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy.js",
 		"deploy_nft_721:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_nft_721.js",
-		"deploy_genesis_721:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_genesis_721.js"
+		"deploy_genesis_721:matic_test": "NETWORK=matic_test npx hardhat run --network matic_test scripts/deploy_genesis_721.js",
+		"deploy_genesis_721:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_genesis_721.js",
+		"deploy_genesis_721:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy_genesis_721.js",
+		"deploy_shard_manager:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy_shard_manager.js",
+		"deploy_shard_manager:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_shard_manager.js",
+		"deploy_blocsportnft_1155:rinkeby": "NETWORK=rinkeby npx hardhat run --network rinkeby scripts/deploy_blocsportnft_1155.js",
+		"deploy_blocsportnft_1155:matic": "NETWORK=matic npx hardhat run --network matic scripts/deploy_blocsportnft_1155.js",
+		"deploy_blocsportnft_1155:moonriver": "NETWORK=moonriver npx hardhat run --network moonriver scripts/deploy_blocsportnft_1155.js"
 	},
 	"author": "",
 	"license": "MIT",

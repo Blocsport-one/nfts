@@ -120,6 +120,6 @@ module.exports = {
     timeout: 20000,
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_KEY, // or use process.env.MOONSCAN_KEY for moonbeam/moonriver network
+    apiKey: process.env.ETHERSCAN_KEY, // or use process.env.MOONSCAN_KEY for moonbeam/moonriver network or process.env.POLYSCAN_KEY or process.env.ETHERSCAN_KEY
   },
 };
